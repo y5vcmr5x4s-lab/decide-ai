@@ -5,27 +5,15 @@ import { Animated, Easing, KeyboardAvoidingView, Platform, Pressable, SafeAreaVi
 
 const processAI = async (question) => {
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('https://decide-ai-zeta.vercel.app/api/decide', {
       method: 'POST',
       headers: {
-        'x-api-key': process.env.EXPO_PUBLIC_ANTHROPIC_KEY,
-        'anthropic-version': '2023-06-01',
         'content-type': 'application/json',
       },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5',
-        max_tokens: 120,
-        system: `Jsi Decide.ai – tichý, moudrý rádce. Pravidla:
-- Odpovídej VŽDY česky
-- MAX 2 věty, poeticky ale prakticky  
-- Nikdy nezačínaj slovem "Já"
-- Žádné seznamy, jen čistá myšlenka
-- Tón: klidný mentor, ne chatbot`,
-        messages: [{ role: 'user', content: question }],
-      }),
+      body: JSON.stringify({ question }),
     });
     const data = await response.json();
-    return data.content[0].text;
+    return data.answer;
   } catch {
     return 'Vesmír mlčí. Zkus to znovu za chvíli.';
   }
